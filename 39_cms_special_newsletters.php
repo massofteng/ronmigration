@@ -2,18 +2,13 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM ro_newsletter WHERE 1=1 AND extrablatt='N'";
+$sql = "SELECT * FROM ro_newsletter WHERE 1=1 AND extrablatt='Y'";
 $result = mysqli_query($old_conn, $sql);
 
 //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 ini_set('max_execution_time', '0'); // for infinite time of execution 
 if ($result->num_rows > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
-    echo '<pre>';
-    print_r($row);
-    echo '</pre>';
-
-
     //1=left, 2=center, 3=right
     $newsletter_title = mysqli_real_escape_string($new_conn, $row['newsletter_title']);
     $created_by = $row['creator_id'];
@@ -38,10 +33,9 @@ if ($result->num_rows > 0) {
       $newsletter_status = 3;
     }
 
-    $insert_sql = "INSERT INTO cms_newsletters (
+    $insert_sql = "INSERT INTO cms_special_newsletters (
       `title`, 
       `slug`,
-      `lead_text`,
       `publish_date`,
       `status`,
       `created_by`,
@@ -50,7 +44,6 @@ if ($result->num_rows > 0) {
       )
     VALUES (
       '" . $newsletter_title . "',
-      '',
       '',
       '" . $publish_date . "', 
       '" . $newsletter_status . "',

@@ -83,11 +83,38 @@ if ($result->num_rows > 0) {
         $created_by = 1;
         $deleted_by = 0;
 
+        // lang id
+        $category_language_query = "SELECT lang FROM ro_categories_categories WHERE category_id='$category_id'";
+        $category_language_query = mysqli_query($old_conn, $category_language_query);
+        $lang_id = 3;
+        if ($category_language_query->num_rows > 0) {
+            $category_language = mysqli_fetch_assoc($category_language_query);
+            $category_language = $category_language['lang'];
+            if (!empty($category_language)) {
+                switch ($category_language) {
+                    case 'de':
+                        $lang_id = 3;
+                        break;
+                    case 'fr':
+                        $lang_id = 2;
+                        break;
+                    case 'en':
+                        $lang_id = 1;
+                        break;
+                    default:
+                        $lang_id = 3;
+                        break;
+                }
+            }
+        }
+
+
         $insert_sql = "INSERT INTO forum_categories (
       `parent_id`,
       `parent_name`, 
       `name`,
       `city_id`,
+      `lang_id`,
       `created_by`,
       `deleted_by`,
       `created_at`,
@@ -98,12 +125,12 @@ if ($result->num_rows > 0) {
       '" . $parent_name . "', 
       '" . $category_title . "', 
       '" . $city_ids . "',
+      '" . $lang_id . "',
       '" . $created_by . "',
       '" . $deleted_by . "',
       '" . date("Y:m:d H:i:s") . "', 
       '" . date("Y:m:d H:i:s") . "' 
       )";
-
 
         if ($new_conn->query($insert_sql) === TRUE) {
             echo $category_title . ' ' . 'Added</br>';

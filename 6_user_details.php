@@ -11,7 +11,7 @@ if (mysqli_fetch_array($result) > 0) {
     // echo '<pre>';
     // print_r($row);
     // echo '</pre>';
-
+    $user_id = $row["user_id"];
     $nickname = mysqli_real_escape_string($new_conn, $row['nickname']);
     $user_firstname = mysqli_real_escape_string($new_conn, $row['user_firstname']);
     $user_surname = mysqli_real_escape_string($new_conn, $row['user_lastname']);
@@ -44,6 +44,14 @@ if (mysqli_fetch_array($result) > 0) {
       $gender = 'Female';
     }
 
+    /**
+     * Birthday 
+     */
+    $birthday_query = "SELECT birthday FROM ro_users WHERE user_id='$user_id'";
+    $birthday_query = mysqli_query($old_conn, $birthday_query);
+    $birthday_result = mysqli_fetch_assoc($birthday_query);
+    $birthday = isset($birthday_result['birthday']) ? $birthday_result['birthday'] : '';
+
     $insert_sql = "INSERT INTO user_details (
   `user_id`,
   `profile_id`,
@@ -56,9 +64,8 @@ if (mysqli_fetch_array($result) > 0) {
   `gender`,
   `short_description`,
   `language`,
+  `dob`,
   `location`,
-  `latitude`,
-  `longitude`,
   `links`,
   `created_at`, 
   `updated_at`
@@ -75,14 +82,15 @@ VALUES (
   '" . $gender . "', 
   " . $short_description . ", 
   " . $language . ",
+  '" . date('Y-m-d H:i:s', strtotime($birthday)) . "',
   " . $location . ", 
-  " . $latitude . ", 
-  " . $longitude . ", 
   " . $site . ", 
   '" . date('Y-m-d H:i:s', $row['created']) . "',
   '" . date('Y-m-d H:i:s', $row['created']) . "'
   )";
-
+    echo '<pre>';
+    print_r($insert_sql);
+    echo '</pre>';
     if ($new_conn->query($insert_sql) === TRUE) {
       echo $row['nickname'] . ' ' . 'Added</br>';
     } else {

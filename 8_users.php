@@ -25,11 +25,58 @@ if ($result->num_rows > 0) {
         $user_active_profile_id = $row['profile_id'];
         $user_created_at = date("Y-m-d H:i:s", $row['user_created']);
 
+        $city_id_query = "SELECT city_id FROM ro_users WHERE user_id='$user_id'";
+        $city_id_result = mysqli_query($old_conn, $city_id_query);
+        $city_name = mysqli_fetch_assoc($city_id_result);
+        $city_name = $city_name['city_id'];
+        $city_id = 0;
+        if (!empty($city_name)) {
+            switch ($city_name) {
+                case 'zurich_en':
+                    $city_id = 1;
+                    break;
+                case 'zuerich':
+                    $city_id = 2;
+                    break;
+                case 'geneve':
+                    $city_id = 3;
+                    break;
+                case 'lausanne':
+                    $city_id = 4;
+                    break;
+                case 'basel':
+                    $city_id = 5;
+                    break;
+                case 'bern':
+                    $city_id = 6;
+                    break;
+                case 'luzern':
+                    $city_id = 7;
+                    break;
+                case 'st_gallen':
+                    $city_id = 8;
+                    break;
+                case 'winterthur':
+                    $city_id = 9;
+                    break;
+                case 'winterthur':
+                    $city_id = 10;
+                    break;
+                case 'family':
+                    $city_id = 11;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         $insert_sql = "INSERT INTO users (
             `name`,
             `email`,
             `password`,
+            `city_id`,
             `active_profile_id`,
+            `default_profile_id`,
             `status`,
             `created_at`,
             `updated_at`
@@ -38,6 +85,8 @@ if ($result->num_rows > 0) {
             '" . $user_email . "',
             '" . $user_password . "',
             '" . $user_active_profile_id . "',
+            '" . $user_active_profile_id . "',
+            '" . $city_id . "',
             '" . $user_status . "',
             '" . $user_created_at . "',
             '" . $user_created_at . "'
