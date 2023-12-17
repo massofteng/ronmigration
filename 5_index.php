@@ -28,4 +28,5 @@ if (mysqli_fetch_array($result) > 0) {
 } else {
   echo "0 results found";
 }
+echo "Test";
 ?>
