@@ -2,7 +2,7 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM    core_translations  limit 500";
+$sql = "SELECT * FROM    core_translations";
 //$sql = "SELECT * FROM    core_translations  where lang_key ='cfg_basel'";
 $result = mysqli_query($old_conn, $sql);
 
