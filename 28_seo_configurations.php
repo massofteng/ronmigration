@@ -9,7 +9,7 @@ $result = mysqli_query($old_conn, $sql);
 //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 ini_set('max_execution_time', '0'); // for infinite time of execution
 $lagn_group = [];
-echo "<pre>";
+
 if (mysqli_fetch_array($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
       //  print_r($row);
