@@ -18,9 +18,14 @@ if (mysqli_fetch_array($result) > 0) {
       $show_name = 1;
     }
 
+    $profile_type = 'Company';
+    if($row['profile_type']=="person"){
+      $profile_type = "Individual";
+    }
+
     $insert_sql = "INSERT INTO user_details (
       `user_id`,
-      `profile_name`, 
+      `nickname`, 
       `profile_id`,
       `account_type`,
       `nickname_for_city`,
@@ -33,7 +38,7 @@ if (mysqli_fetch_array($result) > 0) {
       '".$row['user_id']."', 
       '".$nickname."', 
       '".$row['profile_id']."', 
-      '".$row['profile_type']."', 
+      '".$profile_type."', 
       '". $show_name."', 
       '". $user_firstname."', 
       '". $user_lastname."', 

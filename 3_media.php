@@ -23,13 +23,68 @@ if (mysqli_fetch_array($result) > 0) {
 
     $media_name = mysqli_real_escape_string($new_conn, $row['media_name']);
 
-    $insert_sql = "INSERT INTO uploads (`id`,`user_id`, `profile_id`, `file_name`,`file_original_name`,`extension`,`file_size`,`city_id`,`type`, `relation`)
-    VALUES ('".$row['media_id']."', '".$row['owner_id']."', 1 ,'".$media_name."','".$media_name."','".$file_extension."',1,1,'image','".$row['is_public']."')";
+    $user_id = $row['owner_id'];
+    $sql2 = "SELECT city_id FROM ro_users where user_id=$user_id";
 
-    if ($new_conn->query($insert_sql) === TRUE) {
-       echo $media_name. ' '. 'Added</br>';
-    } else {
-        //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+    if ($result2 = mysqli_query($old_conn, $sql2)) {
+      while ($row2 = mysqli_fetch_row($result2)) {
+        if($row2[0] =='zuerich'){
+          $city_id = 2;
+        }else if($row2[0]=='zurich_en'){
+          $city_id = 1;
+        }else if($row2[0]=='lausanne'){
+          $city_id = 3;
+        }else if($row2[0]=='luzern'){
+          $city_id = 6;
+        }else if($row2[0]=='st_gallen'){
+          $city_id = 7;
+        }else if($row2[0]=='winterthur'){
+          $city_id = 8;
+        }else{
+          $city_id = 99; //No city
+        }
+      }
+    }
+
+    $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id and is_current ='Y' limit 1";
+    $profile_id = 0;
+    if ($result3 = mysqli_query($old_conn, $sql3)) {
+      while ($row3 = mysqli_fetch_row($result3)) {
+        $profile_id = $row3[0];
+      }
+    } 
+
+    if( $city_id!=99){
+      $insert_sql = "INSERT INTO uploads (
+        `id`,
+        `user_id`, 
+        `profile_id`, 
+        `file_name`,
+        `file_original_name`,
+        `extension`,
+        `file_size`,
+        `city_id`,
+        `type`, 
+        `relation`
+        )
+      VALUES (
+        '".$row['media_id']."',
+        '".$user_id."', 
+        '".$profile_id."',
+        '".$media_name."',
+        '".$media_name."',
+        '".$file_extension."',
+        1,
+        '".$city_id."',
+         'image',
+         '".$row['is_public']."'
+         )";
+
+      if ($new_conn->query($insert_sql) === TRUE) {
+        echo $media_name. ' '. 'Added</br>';
+      } else {
+          //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+      }
     }
   }
 } else {
