@@ -2,28 +2,45 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-//ro_tags ->core_tags
-$sql = "SELECT * FROM core_tags";
-$result = mysqli_query($new_conn, $sql);
-ini_set('max_execution_time', '0'); 
-if (mysqli_fetch_array($result) > 0) {
-  while($row = mysqli_fetch_assoc($result)) {
-    $tag_name = mysqli_real_escape_string($new_conn, $row['name']);
-    $sql2 = "SELECT * FROM ro_tags where `tag_word` like '".$tag_name."'";
-    $result2 = mysqli_query($old_conn, $sql2);
+$sql = "SELECT * FROM ro_tags";
+$result = mysqli_query($old_conn, $sql);
+//ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
+ini_set('max_execution_time', '0'); // for infinite time of execution 
+if ($result->num_rows > 0) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $tag_name = mysqli_real_escape_string($old_conn, $row['tag_word']);
+    $created_by = 1;
+    $insert_sql = "INSERT INTO core_tags (
+      `name`,
+      `tag_module`,
+      `community_category_id`,
+      `ron_tips_category_id`,
+      `community_city_id`,
+      `rons_tips_city_id`,
+      `created_by`,
+      `created_at`,
+      `updated_at`
+      )
+    VALUES (
+      '" . $tag_name . "',
+      '[]',
+      '[]',
+      '[]',
+      '[]',
+      '[]',
+      '" . $created_by . "',
+      '" . date("Y:m:d H:i:s") . "', 
+      '" . date("Y:m:d H:i:s") . "' 
+      )";
 
-    if (mysqli_fetch_array($result2) > 0) {
-  
-        while($row2 = mysqli_fetch_assoc($result2)) {
-            $desql = "DELETE FROM ro_tags WHERE tag_id='".$row2['tag_id']."'";
-            if ($old_conn->query($desql) === TRUE) {
-                echo 'ok<br\>';
-            }
-         }
+
+    if ($new_conn->query($insert_sql) === TRUE) {
+      echo $tag_name . ' ' . 'Added</br>';
+    } else {
+      //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
     }
   }
 
 } else {
   echo "0 results found";
 }
-?>
