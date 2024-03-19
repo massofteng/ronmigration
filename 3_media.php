@@ -23,8 +23,8 @@ if (mysqli_fetch_array($result) > 0) {
 
     $media_name = mysqli_real_escape_string($new_conn, $row['media_name']);
 
-    $insert_sql = "INSERT INTO uploads (`id`,`user_id`, `profile_id`, `file_name`,`file_original_name`,`extension`,`file_size`,`city_id`,`type`, `relation`)
-    VALUES ('".$row['media_id']."', '".$row['owner_id']."', 1 ,'".$media_name."','".$media_name."','".$file_extension."',1,1,'image','".$row['is_public']."')";
+    $insert_sql = "INSERT INTO uploads (`id`,`user_id`, `profile_id`, `file_name`,`file_original_name`,`extension`,`file_size`,`city_id`,`type`, `relation`,`created_at`, `updated_at`)
+    VALUES ('".$row['media_id']."', '".$row['owner_id']."', 1 ,'".$media_name."','".$media_name."','".$file_extension."',1,1,'image','".$row['is_public']."', '". date('Y-m-d H:i:s', $row['created'])."', '". date('Y-m-d H:i:s', $row['created'])."')";
 
     if ($new_conn->query($insert_sql) === TRUE) {
        echo $media_name. ' '. 'Added</br>';
@@ -35,4 +35,3 @@ if (mysqli_fetch_array($result) > 0) {
 } else {
   echo "0 results found";
 }
-?>
