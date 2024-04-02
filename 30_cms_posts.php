@@ -13,7 +13,7 @@ if (mysqli_fetch_array($result) > 0) {
         $publication_start=$publication_end="";
         $created_at=date('Y-m-d H:i:s');
         $status=0;
-        $created_by=2;    
+        $created_by=1;    
         if (!empty($row['created'])) {
             $created_at = date('Y-m-d H:i:s', $row['created']);
         }
@@ -27,6 +27,17 @@ if (mysqli_fetch_array($result) > 0) {
         if (!empty($row['active'])) {
             if($row['active']=='Y'){
                 $status=1;
+            }
+        }
+
+        $news_id = $row['news_id'];
+        $sql4 = "SELECT category_id FROM ro_news_categories where news_id=$news_id";
+
+        $category_id = NULL;
+        if ($result4 = mysqli_query($old_conn, $sql4)) {
+            $row4 = mysqli_fetch_assoc($result4);
+            if($row4){
+                $category_id = json_encode($row4['category_id']);
             }
         }
 
@@ -64,9 +75,13 @@ if (mysqli_fetch_array($result) > 0) {
           }
         } 
 
+        //ro_news_categories
+
         if( $city_id!=99){
-        $insert_sql = "INSERT INTO cms_posts (     
+        $insert_sql = "INSERT INTO cms_posts (   
+                `id`,  
                 `title`, 
+                `category`,
                 `short_description`, 
                 `content_type`,
                 `status`,
@@ -81,7 +96,9 @@ if (mysqli_fetch_array($result) > 0) {
                 `creator_profile_id`
             )
             VALUES (
+                '" . $row['news_id'] . "', 
                 '" . $row['title'] . "', 
+                '" . $category_id . "', 
                 '" . htmlentities($row['text']) . "', 
                 1,
                 '" . $status . "', 
@@ -96,6 +113,7 @@ if (mysqli_fetch_array($result) > 0) {
                 '" . $profile_id ."'
             )";
 
+            
             if ($new_conn->query($insert_sql) === TRUE) {
                 echo $row['title'] . 'Added</br>';
             } else {

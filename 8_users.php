@@ -31,43 +31,43 @@ if ($result->num_rows > 0) {
         $city_name = $city_name['city_id'];
         $city_id = 0;
         if (!empty($city_name)) {
-            switch ($city_name) {
+            switch ($name) {
                 case 'zurich_en':
-                    $city_id = 1;
-                    break;
+                  $city_id[] = 1;
+                  break;
                 case 'zuerich':
-                    $city_id = 2;
-                    break;
-                case 'geneve':
-                    $city_id = 3;
-                    break;
+                  $city_id[] = 2;
+                  break;
+                // case 'geneve':
+                //   $city_id[] = 3;
+                //   break;
                 case 'lausanne':
-                    $city_id = 4;
-                    break;
-                case 'basel':
-                    $city_id = 5;
-                    break;
-                case 'bern':
-                    $city_id = 6;
-                    break;
+                  $city_id[] = 3;
+                  break;
+                // case 'basel':
+                //   $city_id[] = 5;
+                //   break;
+                // case 'bern':
+                //   $city_id[] = 6;
+                //   break;
                 case 'luzern':
-                    $city_id = 7;
-                    break;
+                  $city_id[] = 6;
+                  break;
                 case 'st_gallen':
-                    $city_id = 8;
-                    break;
+                  $city_id[] = 7;
+                  break;
+                // case 'winterthur':
+                //   $city_id[] = 9;
+                //   break;
                 case 'winterthur':
-                    $city_id = 9;
-                    break;
-                case 'winterthur':
-                    $city_id = 10;
-                    break;
-                case 'family':
-                    $city_id = 11;
-                    break;
+                  $city_id[] = 8;
+                  break;
+                // case 'family':
+                //   $city_id[] = 11;
+                //   break;
                 default:
-                    break;
-            }
+                  break;
+              }
         }
 
         $insert_sql = "INSERT INTO users (

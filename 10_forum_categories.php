@@ -36,43 +36,43 @@ if ($result->num_rows > 0) {
             foreach ($city_names as $name) {
                 if (!empty($name)) {
                     switch ($name) {
-                        case 'zurich_en':
-                            $city_id[] = 1;
-                            break;
-                        case 'zuerich':
-                            $city_id[] = 2;
-                            break;
-                        case 'geneve':
-                            $city_id[] = 3;
-                            break;
-                        case 'lausanne':
-                            $city_id[] = 4;
-                            break;
-                        case 'basel':
-                            $city_id[] = 5;
-                            break;
-                        case 'bern':
-                            $city_id[] = 6;
-                            break;
-                        case 'luzern':
-                            $city_id[] = 7;
-                            break;
-                        case 'st_gallen':
-                            $city_id[] = 8;
-                            break;
-                        case 'winterthur':
-                            $city_id[] = 9;
-                            break;
-                        case 'winterthur':
-                            $city_id[] = 10;
-                            break;
-                        case 'family':
-                            $city_id[] = 11;
-                            break;
-                        default:
-                            break;
+                      case 'zurich_en':
+                        $city_id[] = 1;
+                        break;
+                      case 'zuerich':
+                        $city_id[] = 2;
+                        break;
+                      // case 'geneve':
+                      //   $city_id[] = 3;
+                      //   break;
+                      case 'lausanne':
+                        $city_id[] = 3;
+                        break;
+                      // case 'basel':
+                      //   $city_id[] = 5;
+                      //   break;
+                      // case 'bern':
+                      //   $city_id[] = 6;
+                      //   break;
+                      case 'luzern':
+                        $city_id[] = 6;
+                        break;
+                      case 'st_gallen':
+                        $city_id[] = 7;
+                        break;
+                      // case 'winterthur':
+                      //   $city_id[] = 9;
+                      //   break;
+                      case 'winterthur':
+                        $city_id[] = 8;
+                        break;
+                      // case 'family':
+                      //   $city_id[] = 11;
+                      //   break;
+                      default:
+                        break;
                     }
-                }
+                  }
             }
         }
 

@@ -27,23 +27,22 @@ if (mysqli_fetch_array($result) > 0) {
     $sql2 = "SELECT city_id FROM ro_users where user_id=$user_id";
 
     if ($result2 = mysqli_query($old_conn, $sql2)) {
-      while ($row2 = mysqli_fetch_row($result2)) {
-        if($row2[0] =='zuerich'){
+       $row2 = mysqli_fetch_assoc($result2);
+        if($row2['city_id'] =='zuerich'){
           $city_id = 2;
-        }else if($row2[0]=='zurich_en'){
+        }else if($row2['city_id']=='zurich_en'){
           $city_id = 1;
-        }else if($row2[0]=='lausanne'){
+        }else if($row2['city_id']=='lausanne'){
           $city_id = 3;
-        }else if($row2[0]=='luzern'){
+        }else if($row2['city_id']=='luzern'){
           $city_id = 6;
-        }else if($row2[0]=='st_gallen'){
+        }else if($row2['city_id']=='st_gallen'){
           $city_id = 7;
-        }else if($row2[0]=='winterthur'){
+        }else if($row2['city_id']=='winterthur'){
           $city_id = 8;
         }else{
           $city_id = 99; //No city
         }
-      }
     }
 
     $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id and is_current ='Y' limit 1";

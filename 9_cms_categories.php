@@ -4,8 +4,7 @@ include("olddb_conn.php");
 
 $sql = "SELECT * FROM ro_categories WHERE target_page ='stadtleben'";
 $result = mysqli_query($old_conn, $sql);
-//ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
-ini_set('max_execution_time', '0'); // for infinite time of execution 
+ini_set('max_execution_time', '0'); 
 if ($result->num_rows > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
 
@@ -42,33 +41,33 @@ if ($result->num_rows > 0) {
             case 'zuerich':
               $city_id[] = 2;
               break;
-            case 'geneve':
+            // case 'geneve':
+            //   $city_id[] = 3;
+            //   break;
+            case 'lausanne':
               $city_id[] = 3;
               break;
-            case 'lausanne':
-              $city_id[] = 4;
-              break;
-            case 'basel':
-              $city_id[] = 5;
-              break;
-            case 'bern':
+            // case 'basel':
+            //   $city_id[] = 5;
+            //   break;
+            // case 'bern':
+            //   $city_id[] = 6;
+            //   break;
+            case 'luzern':
               $city_id[] = 6;
               break;
-            case 'luzern':
+            case 'st_gallen':
               $city_id[] = 7;
               break;
-            case 'st_gallen':
+            // case 'winterthur':
+            //   $city_id[] = 9;
+            //   break;
+            case 'winterthur':
               $city_id[] = 8;
               break;
-            case 'winterthur':
-              $city_id[] = 9;
-              break;
-            case 'winterthur':
-              $city_id[] = 10;
-              break;
-            case 'family':
-              $city_id[] = 11;
-              break;
+            // case 'family':
+            //   $city_id[] = 11;
+            //   break;
             default:
               break;
           }
@@ -78,7 +77,6 @@ if ($result->num_rows > 0) {
 
     $city_ids = !empty($city_id) ? json_encode($city_id) : 0;
 
-    // $city_id = $row['city_id'];
     $created_by = 1;
     $deleted_by = 0;
 
