@@ -14,12 +14,14 @@ if (mysqli_fetch_array($result) > 0) {
     $insert_sql = "INSERT INTO user_profiles (
       `user_id`,
       `profile_name`, 
+      `status`,
       `created_at`, 
       `updated_at`
       )
     VALUES (
       '".$row['user_id']."', 
       '".$nickname."', 
+      'Active',
       '".date('Y-m-d H:i:s', $row['created'])."',
       '".date('Y-m-d H:i:s', $row['created'])."'
       )";

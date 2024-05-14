@@ -53,22 +53,22 @@ if (mysqli_fetch_array($result) > 0) {
     $birthday = isset($birthday_result['birthday']) ? $birthday_result['birthday'] : '';
 
     $insert_sql = "INSERT INTO user_details (
-  `user_id`,
-  `profile_id`,
-  `account_type`,
-  `company_name`,
-  `first_name`,
-  `sur_name`,
-  `nickname`,
-  `nickname_for_city`,
-  `gender`,
-  `short_description`,
-  `language`,
-  `dob`,
-  `location`,
-  `links`,
-  `created_at`, 
-  `updated_at`
+      `user_id`,
+      `profile_id`,
+      `account_type`,
+      `company_name`,
+      `first_name`,
+      `sur_name`,
+      `nickname`,
+      `nickname_for_city`,
+      `gender`,
+      `short_description`,
+      `language`,
+      `dob`,
+      `location`,
+      `links`,
+      `created_at`, 
+      `updated_at`
   )
 VALUES (
   '" . $row['user_id'] . "', 
@@ -90,8 +90,10 @@ VALUES (
   )";
     if ($new_conn->query($insert_sql) === TRUE) {
       echo $row['nickname'] . ' ' . 'Added</br>';
+      $update_sql = "UPDATE users SET completed_profile = 1";
+      mysqli_query($new_conn,$update_sql);
     } else {
-      //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+      echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
     }
   }
 } else {

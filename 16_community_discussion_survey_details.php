@@ -9,7 +9,7 @@ $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0'); // for infinite time of execution 
 if ($result->num_rows > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
-    echo '<pre>';
+    echo '<pre>'; 
     print_r($row);
     echo '</pre>';
 

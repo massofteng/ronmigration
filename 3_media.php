@@ -24,6 +24,7 @@ if (mysqli_fetch_array($result) > 0) {
     $media_name = mysqli_real_escape_string($new_conn, $row['media_name']);
 
     $user_id = $row['owner_id'];
+    $media_id = $row['media_id'];
     $sql2 = "SELECT city_id FROM ro_users where user_id=$user_id";
 
     if ($result2 = mysqli_query($old_conn, $sql2)) {
@@ -45,15 +46,18 @@ if (mysqli_fetch_array($result) > 0) {
         }
     }
 
-    $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id and is_current ='Y' limit 1";
+    // $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id and is_current ='Y' limit 1";
+    $sql3 = "SELECT `user_id`, `profile_id` FROM `ro_profile_media` WHERE `media_id` = $media_id LIMIT 1";
     $profile_id = 0;
+    
     if ($result3 = mysqli_query($old_conn, $sql3)) {
-      while ($row3 = mysqli_fetch_row($result3)) {
-        $profile_id = $row3[0];
-      }
-    } 
+        if ($row3 = mysqli_fetch_assoc($result3)) {
+            $user_id = $row3['user_id'];
+            $profile_id = $row3['profile_id'];
+        }
+    }
 
-    if( $city_id!=99){
+    if( $city_id!=99 && $media_name!=NULL){
       $insert_sql = "INSERT INTO uploads (
         `id`,
         `user_id`, 
@@ -80,7 +84,7 @@ if (mysqli_fetch_array($result) > 0) {
          )";
 
       if ($new_conn->query($insert_sql) === TRUE) {
-        echo $media_name. ' '. 'Added</br>';
+        //echo $media_name. ' '. 'Added</br>';
       } else {
           //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
       }

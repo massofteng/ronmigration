@@ -15,6 +15,8 @@ if (mysqli_fetch_array($result) > 0) {
     }
 
     $user_id = $row['user_id'];
+    $created_at = date('Y-m-d H:i:s', $row['user_created']);
+
     $sql2 = "SELECT city_id FROM ro_users where user_id=$user_id";
 
     if ($result2 = mysqli_query($old_conn, $sql2)) {
@@ -52,7 +54,8 @@ if (mysqli_fetch_array($result) > 0) {
             `active_profile_id`,
             `default_profile_id`,
             `default_registered_profile`,
-            `status`
+            `status`,
+            `created_at`
             )
           VALUES (
             '".$row['user_id']."',
@@ -63,7 +66,8 @@ if (mysqli_fetch_array($result) > 0) {
             '".$profile_id."',
             '".$profile_id."',
             '".$profile_id."',
-            '".$status."'
+            '".$status."',
+            '".$created_at."'
             )";
           if ($new_conn->query($insert_sql) === TRUE) {
               echo $row['user_firstname']. ' '. 'Added</br>';
