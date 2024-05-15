@@ -14,6 +14,11 @@ if (mysqli_fetch_array($result) > 0) {
         $status = 'Active';
     }
 
+    //Basel ->4
+    //Bern ->5
+    //Family NL->9
+    //Romandie ->3
+
     $user_id = $row['user_id'];
     $created_at = date('Y-m-d H:i:s', $row['user_created']);
 
@@ -25,15 +30,22 @@ if (mysqli_fetch_array($result) > 0) {
           $city_id = 2;
         }else if($row2['city_id']=='zurich_en'){
           $city_id = 1;
-        }else if($row2['city_id']=='lausanne'){
+        }else if($row2['city_id']=='lausanne' || $row2['city_id']=='geneve'){
           $city_id = 3;
+        }else if($row2['city_id']=='basel'){
+          $city_id = 4;
+        }else if($row2['city_id']=='bern'){
+          $city_id = 5;
         }else if($row2['city_id']=='luzern'){
           $city_id = 6;
         }else if($row2['city_id']=='st_gallen'){
           $city_id = 7;
         }else if($row2['city_id']=='winterthur'){
           $city_id = 8;
-        }else{
+        }else if($row2['city_id']=='family'){
+          $city_id = 9;
+        }
+        else{
           $city_id = 99; //No city
         }
     }
@@ -47,7 +59,6 @@ if (mysqli_fetch_array($result) > 0) {
           
           $insert_sql = "INSERT INTO users (
             `id`,
-            `name`, 
             `email`, 
             `password`,
             `city_id`,
@@ -59,7 +70,6 @@ if (mysqli_fetch_array($result) > 0) {
             )
           VALUES (
             '".$row['user_id']."',
-            '".$row['user_firstname']."',
             '".$row['user_email']."',
             '".$row['user_password']."',
             '".$city_id."',
