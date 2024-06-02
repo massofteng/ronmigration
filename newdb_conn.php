@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$database = 'ronreload';
+$database = 'test_ronreload';
 $password = "";
 
 // Create connection

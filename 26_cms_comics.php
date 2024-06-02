@@ -20,7 +20,7 @@ if (mysqli_fetch_array($result) > 0) {
       '" . $row['comic_id'] . "', 
       '" . $row['comic_title'] . "', 
       '" . $row['comic_description'] . "', 
-      1,
+      1, 
       '".date('Y-m-d H:i:s', $row['created'])."',
       '".date('Y-m-d H:i:s', $row['created'])."'
       )";

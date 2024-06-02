@@ -13,6 +13,20 @@ if (mysqli_fetch_array($result) > 0) {
     // echo 'salam';
     // print_r($row['media_name']);exit;
 
+
+    $user_id = $row['owner_id'];
+    $media_id = $row['media_id'];
+
+    // 
+    // SELECT owner_id, CONCAT('/media/', media_id) AS `link`, CONCAT('/uploads/', media_key) as `real_path` FROM media_library WHERE owner_id > 0 AND media_name > ''
+
+    // file_name = real path
+    // file_original_name = link 
+    //user_id = owner_id
+    //profile_id = owner default profile id
+    //city_id = owner city id
+
+
     $file_extension = '';
     if($row['media_name']){
         $file_extension = substr($row['media_name'], strpos($row['media_name'], ".") + 1);  
@@ -23,8 +37,7 @@ if (mysqli_fetch_array($result) > 0) {
 
     $media_name = mysqli_real_escape_string($new_conn, $row['media_name']);
 
-    $user_id = $row['owner_id'];
-    $media_id = $row['media_id'];
+
     $sql2 = "SELECT city_id FROM ro_users where user_id=$user_id";
 
     if ($result2 = mysqli_query($old_conn, $sql2)) {

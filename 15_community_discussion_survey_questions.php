@@ -14,21 +14,19 @@ if ($result->num_rows > 0) {
     $description = mysqli_real_escape_string($new_conn, $row['question_text']);
 
     $insert_sql = "INSERT INTO community_discussion_survey_questions (
-  `com_dis_id`,
-  `title`,
-  `description`,
-  `created_at`, 
-  `updated_at`
-  )
-VALUES (
-  '" . $community_discussion_id . "', 
-  '" . $title . "', 
-  '" . $description . "',
-  '" . date("Y:m:d H:i:s") . "',
-  '" . date("Y:m:d H:i:s") . "'
-  )";
-
-
+      `com_dis_id`,
+      `title`,
+      `description`,
+      `created_at`, 
+      `updated_at`
+      )
+    VALUES (
+      '" . $community_discussion_id . "', 
+      '" . $title . "', 
+      '" . $description . "',
+      '" . date("Y:m:d H:i:s") . "',
+      '" . date("Y:m:d H:i:s") . "'
+      )";
 
     if ($new_conn->query($insert_sql) === TRUE) {
       echo $row['question_title'] . ' ' . 'Added</br>';
