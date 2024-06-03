@@ -35,7 +35,9 @@ if ($result->num_rows > 0) {
     }else{
       $package_id = 1;
     }
-
+//current_position = downgrade
+//invoice_no = invoice_id
+//ro_payment_services_orders
     if($package_id!=1){
       $insert_sql = "INSERT INTO subscription_user_purchases (
           `package_id`,
