@@ -2,8 +2,8 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-//LIMIT 200000 OFFSET 100000
-$sql = "SELECT * FROM core_users";
+//LIMIT 200000 OFFSET 100000 647383 655462
+$sql = "SELECT * FROM core_users where user_id > 678676";
 $result = mysqli_query($old_conn, $sql);
 //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 ini_set('max_execution_time', '0'); // for infinite time of execution 

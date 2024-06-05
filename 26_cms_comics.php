@@ -27,7 +27,7 @@ if (mysqli_fetch_array($result) > 0) {
 
 
     if ($new_conn->query($insert_sql) === TRUE) {
-        echo $row['title']. ' '. 'Added</br>';
+        echo $row['comic_title']. ' '. 'Added</br>';
     } else {
       //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
     }
