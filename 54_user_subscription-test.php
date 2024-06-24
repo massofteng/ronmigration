@@ -6,7 +6,7 @@ include("olddb_conn.php");
 $no_payment_data_count = 0;
 
 //ro_adverts_subscription 
-$sql = "SELECT * FROM ro_user_profiles WHERE user_id > 678675 LIMIT 100000";
+$sql = "SELECT * FROM ro_user_profiles";
 $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0');
 if ($result->num_rows > 0) {
