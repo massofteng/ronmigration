@@ -2,10 +2,8 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-// Initialize counter for no payment data found
 $no_payment_data_count = 0;
 
-// Fetch user profiles with non-free upgrades
 $sql = "SELECT * FROM ro_user_profiles WHERE profile_current_upgrade != 'free'";
 $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0');
@@ -120,7 +118,6 @@ if ($result->num_rows > 0) {
                     $heroChats = isset($packageDetails['local_hero_chat_count']) ? $packageDetails['local_hero_chat_count'] : 0;
                     $superHeroChats = isset($packageDetails['local_super_hero_chat_count']) ? $packageDetails['local_super_hero_chat_count'] : 0;
 
-                    // Debugging: Check the values before using them in the SQL query
                     echo "Debug Info: package_id=$package_id, freeChats=$freeChats, localChats=$localChats, heroChats=$heroChats, superHeroChats=$superHeroChats<br>";
 
                     $updateOrCreateSql = "INSERT INTO user_chat_assigns (
@@ -170,6 +167,5 @@ if ($result->num_rows > 0) {
     echo "0 results found";
 }
 
-// Echo the total count of no payment data found
 echo "Total count of no payment data found: " . $no_payment_data_count . "<br>";
 ?>
