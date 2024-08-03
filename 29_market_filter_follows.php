@@ -2,7 +2,7 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM    ro_adverts_passive_search limit 5";
+$sql = "SELECT * FROM ro_adverts_passive_search limit 5";
 
 $result = mysqli_query($old_conn, $sql);
 

@@ -82,6 +82,7 @@ if ($result->num_rows > 0) {
 			$lang_id = $lang_result['lang_id'];
 
 			$insert_sql = "INSERT INTO cms_newsletters (
+				`id`,
 				`title`, 
 				`slug`,
 				`lead_text`,
@@ -95,6 +96,7 @@ if ($result->num_rows > 0) {
 				`updated_at`
 			)
 			VALUES (
+				'" . $newsletter_id . "',
 				'" . $newsletter_title . "',
 				'" . $slug . "',
 				'',

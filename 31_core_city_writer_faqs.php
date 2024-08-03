@@ -2,7 +2,7 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM   core_translations  where lang_key = '547_content'";
+$sql = "SELECT * FROM  core_translations  where lang_key = '547_content'";
 
 
 $result = mysqli_query($old_conn, $sql);

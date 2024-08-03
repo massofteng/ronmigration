@@ -109,8 +109,7 @@ if (mysqli_fetch_array($result) > 0) {
                 `city`,
                 `start_date`,
                 `end_date`,
-                `button_text`,
-                `button_url`,      
+                `nl_button_info`,    
                 `created_at`,
                 `created_by`,
                 `creator_profile_id`
@@ -125,9 +124,8 @@ if (mysqli_fetch_array($result) > 0) {
                 '" . $lang_id . "', 
                 '" . $city_id . "', 
                 '" . $publication_start . "', 
-                '" . $publication_end . "', 
-                '" . $row['link_1_title'] . "', 
-                '" . $row['link_1_url'] . "',         
+                '" . $publication_end . "',  
+                NULL,       
                 '" . $created_at . "',    
                 '" . $created_by . "',
                 '" . $profile_id . "'

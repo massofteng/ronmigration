@@ -5,7 +5,7 @@ include("olddb_conn.php");
 $sql = "SELECT * FROM ro_user_profiles";
 $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0');
-if (mysqli_fetch_array($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         //  echo '<pre>';
         //     print_r($row);

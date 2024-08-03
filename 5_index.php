@@ -3,11 +3,12 @@ include("newdb_conn.php");
 include("olddb_conn.php");
 
 //LIMIT 200000 OFFSET 100000 647383 655462
-$sql = "SELECT * FROM core_users where user_id > 678676";
+$sql = "SELECT * FROM core_users";
 $result = mysqli_query($old_conn, $sql);
 //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 ini_set('max_execution_time', '0'); // for infinite time of execution 
-if (mysqli_fetch_array($result) > 0) {
+//(mysqli_fetch_array
+if (mysqli_num_rows($result) > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
 
     $status = 'Inactive';
@@ -22,9 +23,6 @@ if (mysqli_fetch_array($result) > 0) {
 
     if ($result2 = mysqli_query($old_conn, $sql2)) {
       $row2 = mysqli_fetch_assoc($result2);
-      // echo "<pre>";
-      // echo $user_id;
-      // print_r($row2);
       if ($row2['city_id'] == 'zuerich') {
         $city_id = 2;
       } else if ($row2['city_id'] == 'zurich_en') {
@@ -49,16 +47,16 @@ if (mysqli_fetch_array($result) > 0) {
     }
 
     if ($city_id != 0) {
-    $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id limit 1";
-    $profile_id = 0;
-    $count = 0;
-    if ($result3 = mysqli_query($old_conn, $sql3)) {
-      $row3 = mysqli_fetch_assoc($result3);
+      $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id ORDER BY ASC limit 1";
+      $profile_id = 0;
+      $count = 0;
+      if ($result3 = mysqli_query($old_conn, $sql3)) {
+        $row3 = mysqli_fetch_assoc($result3);
         // echo "<pre>";
         // print_r($row3);exit;
-      $profile_id = $row3['profile_id'];
-      $password = mysqli_real_escape_string($new_conn, $row['user_password']);
-      $insert_sql = "INSERT INTO users (
+        $profile_id = $row3['profile_id'];
+        $password = mysqli_real_escape_string($new_conn, $row['user_password']);
+        $insert_sql = "INSERT INTO users (
             `id`,
             `email`, 
             `password`,
@@ -80,16 +78,13 @@ if (mysqli_fetch_array($result) > 0) {
             '" . $status . "',
             '" . $created_at . "'
             )";
-      if ($new_conn->query($insert_sql) === TRUE) {
-        echo $row['user_id'] . ' ' . 'Added</br>';
-      } else {
-        //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+        if ($new_conn->query($insert_sql) === TRUE) {
+          echo $row['user_id'] . ' ' . 'Added</br>';
+        } else {
+          //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+        }
       }
     }
-    // }else{
-    //   echo $count++;
-    //   echo ' Not in city</br>';
-     }
   }
 } else {
   echo "0 results found";
