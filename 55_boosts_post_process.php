@@ -79,16 +79,16 @@ if (mysqli_fetch_array($result) > 0) {
                             if ($order_date_result && mysqli_num_rows($order_date_result) > 0) {
                                 $order_date_result_row = mysqli_fetch_assoc($order_date_result);
                                 $order_date = $order_date_result_row['order_date'];
-                                if(empty($order_date)){
+                                if (empty($order_date)) {
                                     $updated_at = $created_at = date('Y-m-d H:i:s');
-                                }else{
+                                } else {
                                     $updated_at = $created_at = $order_date . ' 00:00:00';
                                 }
-                            }else{
+                            } else {
                                 $updated_at = $created_at = date('Y-m-d H:i:s');
                             }
 
-                         
+
                             $status = $row['status'];
                             $insert_sql = "INSERT INTO boost_post_process (
                             `post_id`, 
@@ -178,8 +178,41 @@ if (mysqli_fetch_array($result) > 0) {
                             } else {
                                 $transaction_date = date('Y-m-d', $transaction_date);
                             }
+
+                            //Billing info
+
                             //echo $transaction_date;exit;
+                            // {"first_name":"Ron Orp","last_name":"Ron Orp","company_name":null,"email":"superadmin@ronorptest.com","city":"Zurich (EN)"}
+
+                            $contact_info = "SELECT * FROM ro_contact_info WHERE user_id = $user_id ORDER BY user_id ASC LIMIT 1";
+                            $contact_info_result = mysqli_query($old_conn, $contact_info);
+                            $billing_info = "NULL";
+
+
+                            if ($contact_info_result && mysqli_num_rows($contact_info_result) > 0) {
+                                $billing_info = [];
+                                $contact = mysqli_fetch_assoc($contact_info_result);
+
+                                $firstname = !empty($contact['firstname']) ? mysqli_real_escape_string($new_conn, $contact['firstname']) : "";
+
+                                $billing_info['firstname'] = $firstname;
+
+                                $lastname = !empty($contact['lastname']) ? mysqli_real_escape_string($new_conn, $contact['lastname']) : "";
+
+                                $billing_info['lastname'] =  $lastname;
+
+                                $company = !empty($contact['company']) ? mysqli_real_escape_string($new_conn, $contact['company']) : "";
+
+                                $billing_info['company_name'] =  $company;
+                                $billing_info['email'] = $contact['email'];
+
+                                $city = !empty($contact['city']) ? mysqli_real_escape_string($new_conn, $contact['city']) : "";
+                                $billing_info['city'] = $city;
+                                $billing_info = json_encode($billing_info);
+                            }
+
                             $purpose = json_encode(["place_ad_on_website"]);
+
                             $insert_payment_leadger_sql = "INSERT INTO payment_leadgers (
                             `transaction_id`,
                             `prefix`, 
@@ -223,7 +256,7 @@ if (mysqli_fetch_array($result) > 0) {
                             0,
                             '" . $transaction_price . "',
                             '" . 'CHF' . "',
-                            NULL,
+                            '" . $billing_info . "',
                             '" .  $purpose . "',
                             0,
                             '" . $transaction_date . "',
@@ -236,9 +269,11 @@ if (mysqli_fetch_array($result) > 0) {
                             '" .  $discussion_type . "',
                             '" . 'individual' . "'
                             )";
+                            //echo $insert_payment_leadger_sql;exit;
                             if ($new_conn->query($insert_payment_leadger_sql) === TRUE) {
                                 // echo $row['user_id'] . ' ' . 'Added</br>';
                             }
+
 
                             //For insert payment leadger details
                             $payment_leadgers_id = $new_conn->insert_id;

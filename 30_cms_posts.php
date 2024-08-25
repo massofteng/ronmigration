@@ -52,7 +52,7 @@ if (mysqli_fetch_array($result) > 0) {
         }else if($category_id==150){
             $category_id = 6;
         }else{
-            $category_id = 5; //
+            $category_id = 5; //out of town
         }
 
         if ($row['city_id'] == 'zuerich') {

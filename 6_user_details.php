@@ -12,12 +12,12 @@ ini_set('max_execution_time', '0');
 if (mysqli_num_rows($result) > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
     echo "<pre>";
-    var_dump($row );exit;
+    var_dump($row);
+    exit;
     $user_id = $row["user_id"];
     $profile_id = $row['profile_id'];
 
     if ($user_id) {
-
       $nickname = mysqli_real_escape_string($new_conn, $row['nickname']);
       $user_firstname = mysqli_real_escape_string($new_conn, $row['user_firstname']);
       $user_surname = mysqli_real_escape_string($new_conn, $row['user_lastname']);
@@ -57,8 +57,8 @@ if (mysqli_num_rows($result) > 0) {
         $birthday = isset($birthday_result['birthday']) ? $birthday_result['birthday'] : '';
       }
       $dob = date('Y-m-d', strtotime($birthday));
-
       $created_at = date('Y-m-d H:i:s', $row['user_created']);
+      $display_name = $row['display_name'];
 
       if ($birthday_result['city_id'] == 'zuerich') {
         $city_id = 2;
@@ -84,41 +84,39 @@ if (mysqli_num_rows($result) > 0) {
 
       if ($city_id != 0) {
         $insert_sql = "INSERT INTO user_details (
-      `id`,
-      `user_id`,
-      `profile_id`,
-      `account_type`,
-      `company_name`,
-      `first_name`,
-      `sur_name`,
-      `nickname`,
-      `nickname_for_city`,
-      `gender`,
-      `profile_img`,
-      `cover_img`,
-      `album_imgs`,
-      `album_videos`,
-      `short_description`,
-      `description`,
-      `pronoun`,
-      `dob`,
-      `links`,
-      `location`,
-      `company_locations`,
-      `newsletter_city`,
-      `reason`,
-      `deleted_at`,
-      `deleted_by_profile_id`,
-      `created_at`, 
-      `updated_at`,
-      `industry`
-  )
+        `user_id`,
+        `profile_id`,
+        `account_type`,
+        `company_name`,
+        `first_name`,
+        `sur_name`,
+        `nickname`,
+        `nickname_for_city`,
+        `gender`,
+        `profile_img`,
+        `cover_img`,
+        `album_imgs`,
+        `album_videos`,
+        `short_description`,
+        `description`,
+        `pronoun`,
+        `dob`,
+        `links`,
+        `location`,
+        `company_locations`,
+        `newsletter_city`,
+        `reason`,
+        `deleted_at`,
+        `deleted_by_profile_id`,
+        `created_at`, 
+        `updated_at`,
+        `industry`
+    )
       VALUES (
-      NULL,
       '" . $user_id . "', 
       '" . $profile_id . "', 
       '" . $user_profile_type . "', 
-      NULL,
+      '" . $display_name . "', 
       '" . $user_firstname . "', 
       '" . $user_surname . "', 
       '" . $nickname . "', 
