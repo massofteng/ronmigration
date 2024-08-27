@@ -1,3 +1,5 @@
 # ignore ALL db files
 newdb_conn.php
 olddb_conn.php
+.env
+vendor
