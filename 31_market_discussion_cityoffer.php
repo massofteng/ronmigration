@@ -50,6 +50,10 @@ if (mysqli_fetch_array($result) > 0) {
             }
         }
 
+        if ($sub_category == 0 || !is_int($sub_category)) {
+            $sub_category = 1;
+        }
+
         // if ($discussion_type == 'cityoffer') {
 
         //     echo "<pre>";

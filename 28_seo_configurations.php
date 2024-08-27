@@ -2,7 +2,7 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM   core_translations  where lang_group = 'CMS_Elements'";
+$sql = "SELECT * FROM core_translations  where lang_group = 'CMS_Elements'";
 
 $result = mysqli_query($old_conn, $sql);
 

@@ -3,7 +3,13 @@ include("newdb_conn.php");
 include("olddb_conn.php");
 
 //LIMIT 200000 OFFSET 100000 647383 655462
-$sql = "SELECT core_users.user_id,core_users.user_created,core_users.user_email,core_users.user_password,core_users.user_active,ro_users.city_id FROM core_users inner join ro_users on core_users.user_id = ro_users.user_id where core_users.user_id =349184";
+//AND core_users.user_id > 171752 limit 100000
+//where ro_users.city_id = 'zurich_en'
+//AND core_users.user_id > 121575
+
+$sql = "SELECT core_users.user_id,core_users.user_created,core_users.user_email,core_users.user_password,core_users.user_active,ro_users.city_id FROM core_users inner join ro_users on core_users.user_id = ro_users.user_id  AND core_users.user_id > 690317
+ limit 100000";
+
 $result = mysqli_query($old_conn, $sql);
 //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 ini_set('max_execution_time', '0'); // for infinite time of execution 
@@ -22,7 +28,7 @@ if (mysqli_num_rows($result) > 0) {
             $city_id = 2;
         } else if ($row['city_id'] == 'zurich_en') {
             $city_id = 1;
-        } else if ($row['city_id'] == 'lausanne' || $row['city_id'] == 'geneve') {
+        } else if ($row['city_id'] == 'lausanne' || $row['city_id'] == 'geneve' || $row['city_id'] == 'romandie') {
             $city_id = 3;
         } else if ($row['city_id'] == 'basel') {
             $city_id = 4;
@@ -42,19 +48,18 @@ if (mysqli_num_rows($result) > 0) {
 
         // echo "<pre>";
         // print_r($row);exit;
+            $i = 0;
+            if ($city_id != 0) {
+                // $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id ORDER BY ASC limit 1";
+                // $profile_id = 0;
+                $count = 0;
+                // if ($result3 = mysqli_query($old_conn, $sql3)) {
+                //   $row3 = mysqli_fetch_assoc($result3);
 
-        $i = 0;
-        if ($city_id != 0) {
-            // $sql3 = "SELECT profile_id FROM ro_user_profiles where user_id=$user_id ORDER BY ASC limit 1";
-            // $profile_id = 0;
-            $count = 0;
-            // if ($result3 = mysqli_query($old_conn, $sql3)) {
-            //   $row3 = mysqli_fetch_assoc($result3);
+                //   $profile_id = $row3['profile_id'];
+                $password = mysqli_real_escape_string($new_conn, $row['user_password']);
 
-            //   $profile_id = $row3['profile_id'];
-            $password = mysqli_real_escape_string($new_conn, $row['user_password']);
-
-            $insert_sql = "INSERT INTO users (
+                $insert_sql = "INSERT INTO users (
             `id`,
             `email`, 
             `password`,
@@ -76,13 +81,14 @@ if (mysqli_num_rows($result) > 0) {
             '" . $status . "',
             '" . $created_at . "'
             )";
-            if ($new_conn->query($insert_sql) === TRUE) {
-                echo $row['user_id'] . ' ' . 'Added</br>';
-            } else {
-                //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
-            }
+                if ($new_conn->query($insert_sql) === TRUE) {
+                    echo $row['user_id'] . ' ' . 'Added</br>';
+                } else {
+                    //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+                }
+            
 
-            $sql1 ="select * from ro_profile_followers where user_id=$user_id";
+            /*$sql1 ="select * from ro_profile_followers where user_id=$user_id";
             $result1 = mysqli_query($old_conn, $sql1);
             ini_set('max_execution_time', '0');
             if (mysqli_num_rows($result1) > 0) {
@@ -116,7 +122,7 @@ if (mysqli_num_rows($result) > 0) {
                         //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
                     }
                 }
-            }
+            } */
             //}
         } else {
             $i++;

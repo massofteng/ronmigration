@@ -51,9 +51,10 @@ if (mysqli_fetch_array($result) > 0) {
             }
         }
 
-        if(empty($sub_category)){
-            $sub_category = 0;
+        if ($sub_category == 0 || !is_int($sub_category)) {
+            $sub_category = 1;
         }
+
 
         if ($discussion_type == 'jobs') {
 
@@ -101,6 +102,8 @@ if (mysqli_fetch_array($result) > 0) {
             }
 
             $phone = mysqli_real_escape_string($new_conn, $row['phone']);
+
+            $location = json_encode('not_found');
 
             $post_id = $row['advert_id'];
             $check_sql = "SELECT * FROM market_discussions where id=$post_id";

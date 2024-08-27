@@ -1,8 +1,8 @@
 <?php
 include("newdb_conn.php");
 include("olddb_conn.php");
-
-$sql = "SELECT * FROM ro_advertisement where template_id=8";
+//AND advert_id != 453530
+$sql = "SELECT * FROM ro_advertisement where template_id=8 AND advert_id > 1548242";
 $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0');
 if (mysqli_fetch_array($result) > 0) {
@@ -12,8 +12,8 @@ if (mysqli_fetch_array($result) > 0) {
             $city_id = 2;
         } else if ($row['city_id'] == 'zurich_en') {
             $city_id = 1;
-        } else if ($row['city_id'] == 'lausanne' || $row['city_id'] == 'geneve') {
-            $city_id = 3;
+        } else if ($row['city_id'] == 'lausanne' || $row['city_id'] == 'geneve' || $row['city_id'] == 'romandie') {
+            $city_id = 3;;
         } else if ($row['city_id'] == 'basel') {
             $city_id = 4;
         } else if ($row['city_id'] == 'bern') {
@@ -43,13 +43,16 @@ if (mysqli_fetch_array($result) > 0) {
 
         $location = [];
         if (!empty($row['google_address'])) {
-            $location['address'] = $row['google_address'];
+
+            $location['address'] = mysqli_real_escape_string($new_conn, $row['google_address']);
             $location['latitude'] = $row['google_lat'];
             $location['longitude'] = $row['google_lng'];
             $location = json_encode($location);
         } else {
             $location =  json_encode($location);
         }
+
+        //echo $location;exit;
 
 
         if ($result2 = mysqli_query($old_conn, $sql2)) {
@@ -59,6 +62,14 @@ if (mysqli_fetch_array($result) > 0) {
                 $category = $row2['category'];
                 $sub_category = $row2['sub_category'];
             }
+        }
+
+        if ($sub_category == 0 || !is_int($sub_category)) {
+            $sub_category = 1;
+        }
+
+        if ($category == 0 || !is_int($category)) {
+            $category = 1;
         }
 
         $slug = "NULL";
@@ -72,7 +83,6 @@ if (mysqli_fetch_array($result) > 0) {
 
         $published = date('Y-m-d H:i:s', $row['published']);
         $expiration = date('Y-m-d', $row['expiration']);
-        $created = date('Y-m-d', $row['created']);
 
         $phone = "NULL";
         if (!empty($row['phone'])) {
@@ -93,10 +103,20 @@ if (mysqli_fetch_array($result) > 0) {
 
         $url = $row['sp_events_text_link'];
 
-        if (empty($row['url'])) {
+
+
+        if (strlen($url < 1)) {
             $url = "NULL";
         } else {
             $url = htmlentities($url);
+        }
+
+        //echo $row['created'];exit;
+
+        if ($row['created'] == '1543964400' || $row['created'] == '') {
+            $created = "2024-08-26 00:00:00";
+        } else {
+            $created = date('Y-m-d', $row['created']);
         }
 
         //Publication end will be created_at + 29 days
@@ -104,6 +124,11 @@ if (mysqli_fetch_array($result) > 0) {
         $publication_end_date = date('Y-m-d', strtotime($created . ' + 29 days'));
 
         $post_id = $row['advert_id'];
+
+        $location = json_encode('not_found');
+
+        // echo $created;exit;
+
         $check_sql = "SELECT * FROM market_discussions where id=$post_id";
         $check_re = mysqli_query($new_conn, $check_sql);
         if (mysqli_num_rows($check_re) < 1) {
@@ -147,7 +172,7 @@ if (mysqli_fetch_array($result) > 0) {
                     )
                 VALUES (
                     '" . $row['advert_id'] . "',
-                    '" . $discussion_type . "',
+                    'events',
                     '" . $post_type . "',
                     'user',
                     '" .  $sp_events_title . "',
@@ -182,7 +207,8 @@ if (mysqli_fetch_array($result) > 0) {
                     '" . $created . "',
                     '" . $created . "'
                     )";
-                // echo $insert_sql;exit;
+                //echo $insert_sql;
+                //exit;
                 if ($new_conn->query($insert_sql) === TRUE) {
                     //echo $row['user_id'] . ' ' . 'Added</br>';
                 } else {
@@ -210,7 +236,7 @@ if (mysqli_fetch_array($result) > 0) {
                     $first_two_digits = substr($sp_events_time, 0, 2);
                     if (ctype_digit($first_two_digits)) {
                         $sp_start_time = (int)$first_two_digits;
-                        $sp_start_time =  $sp_start_time.':00'.':00';
+                        $sp_start_time =  $sp_start_time . ':00' . ':00';
                     } else {
                         $sp_start_time = 0;
                     }
@@ -294,7 +320,7 @@ if (mysqli_fetch_array($result) > 0) {
                         } else if ($comment['city_id'] == 'zurich_en') {
                             $city_id = 1;
                             $lang_id = 1;
-                        } else if ($comment['city_id'] == 'lausanne' || $comment['city_id'] == 'geneve') {
+                        } else if ($row['city_id'] == 'lausanne' || $row['city_id'] == 'geneve' || $row['city_id'] == 'romandie') {
                             $city_id = 3;
                             $lang_id = 2; // Con
                         } else if ($comment['city_id'] == 'basel') {
@@ -374,7 +400,6 @@ if (mysqli_fetch_array($result) > 0) {
                         }
                     }
                 }
-                
             }
         }
     }

@@ -4,20 +4,25 @@ include("olddb_conn.php");
 
 //where profiles.user_id > 352355
 //349184
-$sql = "SELECT * FROM ro_user_profiles AS profiles 
-JOIN core_users AS users ON profiles.user_id = users.user_id where users.user_id = 2";
+//where users.user_id = 2
+//JOIN core_users AS users ON profiles.user_id = users.user_id
+
+$sql = "SELECT * FROM ro_user_profiles AS profiles JOIN core_users AS users ON profiles.user_id = users.user_id 
+where users.user_id > 690317 limit 150000";
 $result = mysqli_query($old_conn, $sql);
 
 ini_set('max_execution_time', '0');
 if (mysqli_num_rows($result) > 0) {
   while ($row = mysqli_fetch_assoc($result)) {
-    echo "<pre>";
-    var_dump($row);
-    exit;
+    // echo "<pre>";
+    // var_dump($row);
+    // exit;
     $user_id = $row["user_id"];
     $profile_id = $row['profile_id'];
 
     if ($user_id) {
+      // mysqli_set_charset($new_conn, "utf8mb4");
+      $new_conn->set_charset("utf8");
       $nickname = mysqli_real_escape_string($new_conn, $row['nickname']);
       $user_firstname = mysqli_real_escape_string($new_conn, $row['user_firstname']);
       $user_surname = mysqli_real_escape_string($new_conn, $row['user_lastname']);
@@ -60,11 +65,13 @@ if (mysqli_num_rows($result) > 0) {
       $created_at = date('Y-m-d H:i:s', $row['user_created']);
       $display_name = $row['display_name'];
 
+      $display_name = mysqli_real_escape_string($new_conn,  $display_name);
+
       if ($birthday_result['city_id'] == 'zuerich') {
         $city_id = 2;
       } else if ($birthday_result['city_id'] == 'zurich_en') {
         $city_id = 1;
-      } else if ($birthday_result['city_id'] == 'lausanne' || $birthday_result['city_id'] == 'geneve') {
+      } else if ($birthday_result['city_id'] == 'lausanne' || $birthday_result['city_id'] == 'geneve' || $birthday_result['city_id'] == 'romandie') {
         $city_id = 3;
       } else if ($birthday_result['city_id'] == 'basel') {
         $city_id = 4;
@@ -110,7 +117,8 @@ if (mysqli_num_rows($result) > 0) {
         `deleted_by_profile_id`,
         `created_at`, 
         `updated_at`,
-        `industry`
+        `industry`,
+        `completed_profile`
     )
       VALUES (
       '" . $user_id . "', 
@@ -119,8 +127,8 @@ if (mysqli_num_rows($result) > 0) {
       '" . $display_name . "', 
       '" . $user_firstname . "', 
       '" . $user_surname . "', 
-      '" . $nickname . "', 
-      0, 
+      '$nickname', 
+      1, 
       '" . $gender . "', 
       NULL,
       NULL,
@@ -139,12 +147,13 @@ if (mysqli_num_rows($result) > 0) {
       0,
       '" . $created_at . "',
       '" . $created_at . "',
-      NULL
+      NULL,
+      1
       )";
         if ($new_conn->query($insert_sql) === TRUE) {
           echo $row['nickname'] . ' ' . 'Added</br>';
-          $update_sql = "UPDATE users SET completed_profile = 1";
-          mysqli_query($new_conn, $update_sql);
+          // $update_sql = "UPDATE users SET registration_complete = 1";
+          // mysqli_query($new_conn, $update_sql);
         } else {
           echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
         }

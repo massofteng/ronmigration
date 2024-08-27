@@ -2,7 +2,9 @@
 include("newdb_conn.php");
 include("olddb_conn.php");
 
-$sql = "SELECT * FROM ro_topads_orders where advert_id > 0 ORDER BY topad_id ASC";
+//AND advert_id > 3341690
+//AND advert_id > 132204
+$sql = "SELECT * FROM ro_topads_orders where advert_id > 0 ORDER BY topad_id desc";
 $result = mysqli_query($old_conn, $sql);
 ini_set('max_execution_time', '0');
 if (mysqli_fetch_array($result) > 0) {
@@ -12,7 +14,7 @@ if (mysqli_fetch_array($result) > 0) {
             $city_id = 2;
         } else if ($row['order_cities'] == 'zurich_en') {
             $city_id = 1;
-        } else if ($row['order_cities'] == 'lausanne' || $row['order_cities'] == 'geneve') {
+        } else if ($row['order_cities'] == 'lausanne' || $row['order_cities'] == 'geneve' || $row['order_cities'] == 'romandie') {
             $city_id = 3;
         } else if ($row['order_cities'] == 'basel') {
             $city_id = 4;
@@ -57,34 +59,135 @@ if (mysqli_fetch_array($result) > 0) {
 
                     //For getting profile_id from ro_user_profiles
                     $profile_id = 0;
-                    $profile = "SELECT profile_id FROM ro_user_profiles WHERE user_id = $user_id ORDER BY profile_id ASC LIMIT 1";
-                    $profile_result = mysqli_query($old_conn, $profile);
+                    $profile = "SELECT active_profile_id FROM users WHERE id = $user_id";
+                    $profile_result = mysqli_query($new_conn, $profile);
 
                     if ($profile_result && mysqli_num_rows($profile_result) > 0) {
                         $profile_row = mysqli_fetch_assoc($profile_result);
-                        $profile_id = $profile_row['profile_id'];
+                        $profile_id = $profile_row['active_profile_id'];
                     }
+
+                    // echo $row['topad_id'];exit;
 
                     //Get order date
                     $order_date = "0000-00-00";
                     $topad_id = $row['topad_id'];
-                    $order_date = "SELECT topad_order_date FROM ro_topads_order_dates WHERE topad_id = $topad_id ORDER BY adtext_id ASC LIMIT 1";
+                    $order_date = "SELECT topad_order_date FROM ro_topads_order_dates WHERE topad_id = $topad_id 
+                    AND topad_order_date > CURDATE() 
+                    ORDER BY topad_order_date";
                     $order_date_result = mysqli_query($old_conn, $order_date);
 
+                    $future_date_result_row = [];
                     if ($order_date_result && mysqli_num_rows($order_date_result) > 0) {
-                        $order_date_result_row = mysqli_fetch_assoc($order_date_result);
-                        $order_date = $order_date_result_row['topad_order_date'];
-                        if (empty($order_date)) {
-                            $updated_at = $created_at = date('Y-m-d H:i:s');
-                        } else {
-                            $updated_at = $created_at = $order_date . ' 00:00:00';
+                        while ($order_row = mysqli_fetch_assoc($order_date_result)) {
+                            if (empty($order_row['topad_order_date'])) {
+                                $updated_at = $created_at = date('Y-m-d H:i:s');
+                                $future_date_result_row[] =  $updated_at;
+                            } else {
+                                $future_date_result_row[] = $order_row['topad_order_date'];
+                                $updated_at = $created_at = $order_row['topad_order_date'] . ' 00:00:00';
+                            }
                         }
                     } else {
                         $updated_at = $created_at = date('Y-m-d H:i:s');
+                        $future_date_result_row[] =  $updated_at;
                     }
 
+                    // // echo $order_date;exit;
+                    // echo '<pre>';
+                    // print_r($future_date_result_row);exit;
 
-                    $status = $row['status'];
+                    $check_sql = "SELECT * FROM market_discussions where id=$advert_id";
+                    $check_re = mysqli_query($new_conn, $check_sql);
+                    // echo mysqli_num_rows($check_re);exit;
+                    if (mysqli_num_rows($check_re) < 0) {
+                        //echo 'No';
+                        $insert_sql = "INSERT INTO market_discussions (
+                                `id`,
+                                    `discussion_type`,
+                                    `post_type`,
+                                    `post_source`,
+                                    `title`,
+                                    `slug`,
+                                    `description`,
+                                    `category_id`,
+                                    `sub_category_id`,
+                                    `pricing`,
+                                    `price`,
+                                    `trade_product`,
+                                    `donation_method`,
+                                    `donation_organization_name`,
+                                    `publication_end_date`,
+                                    `one_year_publication_plan`,
+                                    `communication_method`,
+                                    `phone_number`,
+                                    `email_address`,
+                                    `location`,
+                                    `event_organizer`,
+                                    `zip_code`,
+                                    `city`,
+                                    `city_id`,
+                                    `publication_city`,
+                                    `is_course`,
+                                    `frequency_of_course`,
+                                    `tags`,
+                                    `image`,
+                                    `link`,
+                                    `status`,
+                                    `created_by`,
+                                    `creator_profile_id`,
+                                    `created_at`,
+                                    `updated_at`
+                                    )
+                                VALUES (
+                                    '" . $advert_id . "',
+                                    'commercial',
+                                    NULL,
+                                    'user',
+                                    'Unknown',
+                                    NULL,
+                                    'Unknown',
+                                    1',
+                                    1,
+                                    'price',
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    0,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    '" . $city_id . "',
+                                    '" . $city_id . "',
+                                    '" . $city_id . "',
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    NULL,
+                                    0,
+                                    '" . $user_id . "',
+                                    '" . $profile_id . "',
+                                    '" . $created_at . "',
+                                    '" . $created_at . "'
+                                    )";
+                        //echo $insert_sql;
+                        //exit;
+                        if ($new_conn->query($insert_sql) === TRUE) {
+                            //echo $row['user_id'] . ' ' . 'Added</br>';
+                        } else {
+                            //echo "Error: " . $insert_sql . "<br>" . $new_conn->error;
+                        }
+                    }
+
+                    // exit;
+
+                    // $status = $row['status'];
                     $insert_sql = "INSERT INTO boost_post_process (
                             `post_id`, 
                             `discussion_type`,
@@ -111,7 +214,7 @@ if (mysqli_fetch_array($result) > 0) {
                             '" . $user_id . "',
                             '" . $profile_id . "',
                             0,
-                            '" . $status . "',
+                            1,
                             '" . $created_at . "',
                             '" . $updated_at . "'
                             )";
@@ -121,7 +224,7 @@ if (mysqli_fetch_array($result) > 0) {
                     }
 
                     $boosts_process_id = $new_conn->insert_id;
-                    $date = json_encode([$created_at]); // Ensure $created_at is a valid variable
+                    $date = json_encode($future_date_result_row); // Ensure $created_at is a valid variable
 
                     $insert_boosts_details_sql = "INSERT INTO boost_post_process_details (
                             boost_post_process_id,
@@ -153,7 +256,7 @@ if (mysqli_fetch_array($result) > 0) {
                             '$transaction_price',
                             NULL,
                             0,
-                            $status,
+                            1,
                             '$advert_id',
                             '$user_id',
                             '$profile_id',
@@ -251,7 +354,7 @@ if (mysqli_fetch_array($result) > 0) {
                             '" . $transaction_date . "',
                             '" . $user_id . "',
                             '" . $profile_id . "',
-                            '" . $status . "',
+                            1,
                             '" . $created_at . "',
                             '" . $updated_at . "',
                             '" . $city_id . "',
